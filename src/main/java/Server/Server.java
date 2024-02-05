@@ -56,8 +56,8 @@ public class Server extends JFrame {
         btnPanel.add(btnStart);
         btnPanel.add(btnStop);
 
-        add(textArea,BorderLayout.NORTH);
-        add(btnPanel, BorderLayout.SOUTH);
+        this.add(textArea,BorderLayout.NORTH);
+        this.add(btnPanel, BorderLayout.SOUTH);
     }
     public boolean auth(String login, String password){
         if(isServerStart){
@@ -90,6 +90,10 @@ public class Server extends JFrame {
             throw new RuntimeException(e);
         }
         return log;
+    }
+
+    public String getTextArea(){
+        return textArea.getText();
     }
 
 }

@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class Client extends JFrame {
     private static final int WINDOW_HEIGHT = 360;
@@ -29,8 +28,6 @@ public class Client extends JFrame {
     private JTextField writeMessage = new JTextField();
     private JButton sendMessage = new JButton("Send");
     private JPanel panMessage = new JPanel(new GridLayout(1,2));
-
-    private static String msg;
 
     public Client(Server server){
         setLocation(WINDOW_POSX,WINDOW_POSY);
@@ -52,13 +49,13 @@ public class Client extends JFrame {
         panMessage.setVisible(false);
         messages.setEditable(false);
         messages.setVisible(false);
-        add(panConnected, BorderLayout.NORTH);
-        add(messages, BorderLayout.CENTER);
-        add(panMessage,BorderLayout.SOUTH);
+        this.add(panConnected, BorderLayout.NORTH);
+        this.add(messages, BorderLayout.CENTER);
+        this.add(panMessage,BorderLayout.SOUTH);
 
         JScrollPane jScrollPane = new JScrollPane(messages);
         jScrollPane.setVisible(false);
-        add(jScrollPane);
+        this.add(jScrollPane);
 
         btnLogin.addActionListener(new ActionListener() {
             @Override
@@ -68,13 +65,10 @@ public class Client extends JFrame {
                     messages.setVisible(true);
                     panMessage.setVisible(true);
                     jScrollPane.setVisible(true);
-                    String lastMsg = null;
                     List<String> temp = server.downloadFromLog();
                     for(int i = 0; i < temp.size(); i++){
-                        lastMsg = temp.get(i);
                         messages.append(temp.get(i) + "\n");
                     }
-                    msg = lastMsg;
                 }
             }
         });
@@ -82,7 +76,6 @@ public class Client extends JFrame {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 server.saveInLog(login.getText(), writeMessage.getText());
-                msg = login.getText() + ": " + writeMessage.getText();
                 messages.append(login.getText() + ": " + writeMessage.getText() + "\n");
                 writeMessage.setText("");
             }
@@ -94,11 +87,12 @@ public class Client extends JFrame {
     public void update(Server server){
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
         executorService.scheduleWithFixedDelay(()-> {
-            List<String> log = List.of(messages.getText().split("\n"));
-            if(!log.get(log.size()-1).equals(msg) && msg != null && !log.get(1).equals(msg)){
-                messages.append(msg + "\n");
+            List<String> messageLog = List.of(this.messages.getText().split("\n"));
+            List<String> log = server.downloadFromLog();
+            if(!messageLog.get(messageLog.size()-1).equals(log.get(log.size()-1)) && !messageLog.isEmpty()){
+                this.messages.append(log.get(log.size()-1) + "\n");
             }
-        }, 0,1, TimeUnit.SECONDS);
+        }, 0,100, TimeUnit.MILLISECONDS);
 
     }
 
