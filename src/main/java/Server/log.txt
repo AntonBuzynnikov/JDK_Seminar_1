@@ -1,5 +1,5 @@
-Anton: Всем привет!
-Oleg: Оооо! Сколько лет сколько зим!
-Ivan: Как дела?
-Anton: Привет
+Anton: Hello!
+Oleg: Hi!
+Oleg: Привет
 Oleg: Как дела?
+Ivan Ivanov: Да нормально! Ты как?

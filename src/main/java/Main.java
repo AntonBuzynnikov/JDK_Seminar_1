@@ -1,10 +1,12 @@
 import Client.Client;
-import Server.Server;
+import Server.*;
+import Client.*;
 
 public class Main {
     public static void main(String[] args) {
-        Server server = new Server();
-        new Client(server);
-        new Client(server);
+        Server server = new Server(new ServerRepositoryTXT());
+        server.attach(new ServerGUI(server));
+        server.attach(new ClientGUI(server));
+        server.attach(new ClientGUI(server));
     }
 }
